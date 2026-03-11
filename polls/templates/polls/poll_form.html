@@ -3,40 +3,140 @@
 {% block title %}Anket Formu - Django Anketleri{% endblock %}
 
 {% block content %}
-<div class="card w-full max-w-2xl mx-auto bg-base-100 shadow-xl border border-base-200 mt-10">
-    <div class="card-body">
-        <h2 class="card-title text-2xl font-bold mb-6">
-            {% if object %}Anketi Düzenle{% else %}Yeni Anket Oluştur{% endif %}
-        </h2>
+<div class="card w-full max-w-3xl mx-auto bg-base-100 shadow-2xl border border-base-200 mt-6 lg:mt-10">
+    <div class="card-body p-6 sm:p-10">
+        
+        <!-- Header -->
+        <div class="flex flex-col sm:flex-row items-center sm:items-start gap-4 border-b border-base-200 pb-6 mb-8 text-center sm:text-left">
+            <div class="w-16 h-16 rounded-full bg-primary/10 flex-shrink-0 flex items-center justify-center text-primary mb-2 sm:mb-0">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+            </div>
+            <div>
+                <h2 class="card-title text-3xl font-extrabold text-base-content/90 m-0 p-0 inline-block">
+                    {% if object %}Anketi Düzenle{% else %}Yeni Anket Oluştur{% endif %}
+                </h2>
+                <p class="text-base-content/60 mt-2 text-sm sm:text-base leading-relaxed max-w-xl">
+                    {% if object %}
+                    Mevcut anketinizin başlığını veya görünürlük (gizlilik) ayarını buradan güncelleyip kaydedebilirsiniz.
+                    {% else %}
+                    İnsanlara sormak istediğiniz soruyu (anket başlığını) belirleyin. 
+                    Sonraki adımda seçenekleri (şıkları) tek tek ekleyebileceksiniz.
+                    {% endif %}
+                </p>
+            </div>
+        </div>
 
-        <form method="post" action="" class="space-y-6">
+        <form method="post" action="" class="space-y-8">
             {% csrf_token %}
 
-            <div class="form-control w-full">
-                <label class="label font-bold text-base-content/80">Anket Sorusu</label>
-                <input type="text" name="{{ form.question_text.name }}" class="input input-bordered w-full"
-                    value="{{ form.question_text.value|default_if_none:'' }}" required autofocus>
+            <!-- Question Input -->
+            <div class="form-control w-full relative">
+                <label class="label pb-2 pt-0">
+                    <span class="label-text font-bold text-lg text-base-content/80">Anket Sorusu / Başlığı</span>
+                </label>
+                <div class="relative group">
+                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-base-content/40 group-focus-within:text-primary transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <input type="text" name="{{ form.question_text.name }}" 
+                        class="input input-lg input-bordered w-full pl-12 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all text-lg sm:text-xl font-medium shadow-sm bg-base-100"
+                        placeholder="Örn: En sevdiğiniz programlama dili hangisi?"
+                        value="{{ form.question_text.value|default_if_none:'' }}" required autofocus>
+                </div>
+                <label class="label pt-2">
+                    <span class="label-text-alt text-base-content/60 text-sm whitespace-normal break-words w-full">Kısa, net ve ilgi çekici bir soru sormanız katılım oranını artıracaktır.</span>
+                </label>
                 {% if form.question_text.errors %}
-                <label class="label text-error text-sm">{{ form.question_text.errors.as_text }}</label>
+                <div class="mt-1">
+                    <label class="label text-error text-sm flex items-center gap-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                        {{ form.question_text.errors.as_text }}
+                    </label>
+                </div>
                 {% endif %}
             </div>
 
-            <div class="form-control hover:bg-base-200/50 p-4 rounded-xl border border-base-200 transition-colors">
-                <label class="label cursor-pointer flex justify-between items-center w-full shadow-sm m-0 p-0">
-                    <div class="flex flex-col">
-                        <span class="label-text font-bold text-base">Herkese Açık (Global) Yap</span>
-                        <span class="label-text-alt text-base-content/60 mt-1">Kapalı olursa sadece anketin URL linkini
-                            yolladığınız kişiler görüp oy verebilir. Ana sayfada listelenmez.</span>
+            <!-- Public Toggle Settings -->
+            <div class="bg-base-200/40 hover:bg-base-200 rounded-2xl border border-base-200/70 p-5 sm:p-6 transition-all shadow-sm">
+                <div class="flex flex-col sm:flex-row gap-4 sm:gap-6 items-start sm:items-center">
+                    <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-accent/10 flex-shrink-0 flex items-center justify-center text-accent">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 sm:h-7 sm:w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+                        </svg>
                     </div>
-                    <input type="checkbox" name="{{ form.is_public.name }}" class="toggle toggle-primary toggle-lg" {%
-                        if form.is_public.value or not object %}checked{% endif %}>
-                </label>
+                    
+                    <div class="flex-grow min-w-0 pr-0 sm:pr-4">
+                        <h3 class="text-lg sm:text-xl font-bold text-base-content mb-1">Herkese Açık (Global) Yap</h3>
+                        <p class="text-sm text-base-content/70 whitespace-normal break-words leading-relaxed">
+                            <span class="font-medium text-success/80">Açık</span> olursa, ana sayfada tüm ziyaretçiler anketi görebilir ve katılabilir.
+                            <br>
+                            <span class="font-medium text-error/80">Kapalı</span> olursa, sadece sizin URL linkini paylaştığınız kişiler anketi görüp oy verebilir.
+                        </p>
+                    </div>
+
+                    <div class="flex-shrink-0 self-end sm:self-center mt-2 sm:mt-0">
+                        <input type="checkbox" name="{{ form.is_public.name }}" class="toggle toggle-primary toggle-lg shadow-inner border-2 border-base-300" {% if form.is_public.value or not object %}checked{% endif %}>
+                    </div>
+                </div>
             </div>
 
-            <div class="card-actions flex justify-between items-center mt-8 pt-6 border-t border-base-200">
+            <!-- End Date Input -->
+            <div class="form-control w-full relative">
+                <label class="label pb-2 pt-0">
+                    <span class="label-text font-bold text-lg text-base-content/80">Bitiş Tarihi ve Saati <span class="text-base-content/50 font-normal text-sm ml-2">(İsteğe Bağlı)</span></span>
+                </label>
+                <div class="relative group">
+                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-base-content/40 group-focus-within:text-primary transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                    </div>
+                    <input type="datetime-local" name="{{ form.end_date.name }}" 
+                        class="input input-lg input-bordered w-full pl-12 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all text-lg font-medium shadow-sm bg-base-100 placeholder:text-base-content/40"
+                        value="{{ form.end_date.value|date:'Y-m-d\TH:i'|default_if_none:'' }}">
+                </div>
+                <label class="label pt-2">
+                    <span class="label-text-alt text-base-content/60 text-sm whitespace-normal break-words w-full">Eğer ankete bir bitiş tarihi koymak istiyorsanız seçin. Süre dolduğunda oylama kapanır ve sadece sonuçlar görünür. Boş bırakırsanız sonsuza dek açık kalır.</span>
+                </label>
+                {% if form.end_date.errors %}
+                <div class="mt-1">
+                    <label class="label text-error text-sm flex items-center gap-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                        {{ form.end_date.errors.as_text }}
+                    </label>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Contextual Information -->
+            {% if not object %}
+            <div class="bg-info/5 rounded-2xl border border-info/20 p-5 flex flex-col sm:flex-row items-start gap-4">
+                <div class="text-info mt-1 flex-shrink-0 bg-info/10 p-2 rounded-full">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="text-sm text-base-content/80">
+                    <p class="font-bold mb-1 text-info text-base">Şıkları Sonraki Adımda Ekleyeceksiniz</p>
+                    <p class="leading-relaxed whitespace-normal break-words w-full">Bu adımda sadece sorunun kendisini (başlığı) oluşturuyorsunuz. Devam ettiğinizde açılacak olan Anket Yönetim sayfasından anketinize dilediğiniz sayıda cevap şıkkı (seçenek) ekleyebileceksiniz.</p>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Actions -->
+            <div class="flex flex-col sm:flex-row justify-end items-center gap-3 sm:gap-4 mt-10 pt-8 border-t border-base-200 w-full overflow-hidden">
                 <a href="{% if object %}{% url 'polls:manage' object.id %}{% else %}{% url 'polls:my_polls' %}{% endif %}"
-                    class="btn btn-ghost">İptal</a>
-                <button type="submit" class="btn btn-primary px-8">Kaydet ve İlerle</button>
+                    class="btn btn-ghost w-full sm:w-auto font-semibold shrink-0">İptal</a>
+                <button type="submit" class="btn btn-primary btn-lg w-full sm:w-auto sm:px-10 shadow-lg hover:shadow-primary/40 hover:-translate-y-0.5 transition-all duration-300">
+                    {% if object %}Kaydet{% else %}Devam Et{% endif %}
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    </svg>
+                </button>
             </div>
         </form>
     </div>

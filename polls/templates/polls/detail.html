@@ -16,9 +16,25 @@
             Anketlere Dön
         </a>
 
-        <div class="mb-8">
-            <span class="badge badge-secondary badge-outline mb-3 font-semibold uppercase tracking-wider text-xs">Anket
-                Sorusu</span>
+        <div class="mb-8 flex flex-col items-start">
+            <div class="flex flex-wrap gap-2 mb-3">
+                <span class="badge badge-secondary badge-outline font-semibold uppercase tracking-wider text-xs">Anket
+                    Sorusu</span>
+                {% if question.end_date %}
+                    {% if question.is_expired %}
+                    <span class="badge badge-error font-semibold uppercase tracking-wider text-xs gap-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" /></svg>
+                        Süresi Doldu
+                    </span>
+                    {% else %}
+                    <span class="badge badge-warning font-semibold uppercase tracking-wider text-xs gap-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd" /></svg>
+                        Bitiş: {{ question.end_date|date:"d M H:i" }}
+                    </span>
+                    {% endif %}
+                {% endif %}
+            </div>
+            
             <h1 class="card-title text-3xl md:text-4xl font-extrabold text-base-content/90 leading-tight">
                 {{ question.question_text }}
             </h1>
@@ -39,6 +55,27 @@
         </div>
         {% endif %}
 
+        {% if question.is_expired %}
+        <!-- Expired state UI -->
+        <div class="bg-base-200/50 border border-base-200 rounded-2xl p-8 text-center mt-6">
+            <div class="w-16 h-16 bg-base-300 rounded-full flex items-center justify-center mx-auto mb-4 text-base-content/60">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </div>
+            <h3 class="text-2xl font-bold mb-2">Bu Anket Sona Erdi</h3>
+            <p class="text-base-content/70 mb-6 max-w-md mx-auto">
+                {{ question.end_date|date:"d F Y, H:i" }} itibarıyla bu anketin oylama süresi dolmuştur. Yeni oy kullanılamaz, ancak mevcut sonuçları inceleyebilirsiniz.
+            </p>
+            <a href="{% url 'polls:results' question.id %}" class="btn btn-primary btn-lg shadow-md px-8 hover:-translate-y-1 transition-all">
+                Anket Sonuçlarını Gör
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+            </a>
+        </div>
+        {% else %}
+        <!-- Active voting form -->
         <form action="{% url 'polls:vote' question.id %}" method="post" class="relative z-10">
             {% csrf_token %}
             <div class="form-control mb-10 space-y-4">
@@ -66,6 +103,7 @@
                 </button>
             </div>
         </form>
+        {% endif %}
 
     </div>
 </div>

@@ -3,52 +3,82 @@
 {% block title %}Giriş Yap - Django Anketleri{% endblock %}
 
 {% block content %}
-<div class="card w-full max-w-md mx-auto bg-base-100 shadow-2xl border border-base-200 mt-10">
-    <div class="card-body">
-        <h2 class="card-title text-3xl font-extrabold mb-6 flex justify-center text-primary">Giriş Yap</h2>
-
-        {% if form.errors %}
-        <div class="alert alert-error shadow-sm mb-4">
-            <span>Kullanıcı adı veya şifre eşleşmedi. Lütfen tekrar deneyin.</span>
-        </div>
-        {% endif %}
-
-        {% if next %}
-        {% if user.is_authenticated %}
-        <div class="alert alert-warning shadow-sm mb-4">
-            <span>Bu sayfayı görmek için yeterli izniniz yok.</span>
-        </div>
-        {% else %}
-        <div class="alert alert-info shadow-sm mb-4">
-            <span>Lütfen bu sayfayı görmek için giriş yapın.</span>
-        </div>
-        {% endif %}
-        {% endif %}
-
-        <form method="post" action="{% url 'login' %}" class="space-y-4">
-            {% csrf_token %}
-            <div class="form-control w-full">
-                <label class="label font-bold text-base-content/80">{{ form.username.label_tag }}</label>
-                <input type="text" name="{{ form.username.name }}" class="input input-bordered w-full" autofocus
-                    required id="{{ form.username.id_for_label }}">
+<div class="min-h-[80vh] flex items-center justify-center p-4">
+    <div class="card w-full max-w-lg bg-base-100 shadow-2xl border border-base-200">
+        <div class="card-body p-8 sm:p-10">
+            <!-- Icon -->
+            <div class="flex justify-center mb-6">
+                <div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-8 h-8">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+                    </svg>
+                </div>
             </div>
-            <div class="form-control w-full">
-                <label class="label font-bold text-base-content/80">{{ form.password.label_tag }}</label>
-                <input type="password" name="{{ form.password.name }}" class="input input-bordered w-full" required
-                    id="{{ form.password.id_for_label }}">
+            
+            <h2 class="text-3xl font-extrabold mb-2 text-center text-base-content">Hoş Geldiniz</h2>
+            <p class="text-center text-base-content/60 mb-8">Hesabınıza giriş yaparak devam edin.</p>
+
+            {% if form.errors %}
+            <div class="alert alert-error shadow-sm mb-6 rounded-box">
+                <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                <span>Kullanıcı adı veya şifre eşleşmedi. Lütfen tekrar deneyin.</span>
             </div>
+            {% endif %}
 
-            <input type="hidden" name="next" value="{{ next }}" />
+            {% if next %}
+                {% if user.is_authenticated %}
+                <div class="alert alert-warning shadow-sm mb-6 rounded-box">
+                    <span>Bu sayfayı görmek için yeterli izniniz yok.</span>
+                </div>
+                {% else %}
+                <div class="alert alert-info shadow-sm mb-6 rounded-box">
+                    <span>Lütfen bu sayfayı görmek için giriş yapın.</span>
+                </div>
+                {% endif %}
+            {% endif %}
 
-            <div class="form-control mt-8">
-                <button type="submit" class="btn btn-primary btn-block text-lg">Giriş Yap</button>
+            <form method="post" action="{% url 'login' %}" class="space-y-5">
+                {% csrf_token %}
+                <div class="form-control w-full relative">
+                    <label class="label pb-2">
+                        <span class="label-text font-semibold">Kullanıcı Adı</span>
+                    </label>
+                    <div class="relative flex items-center">
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none text-base-content/40">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            </svg>
+                        </div>
+                        <input type="text" name="{{ form.username.name }}" class="input input-bordered w-full pl-11 focus:border-primary focus:ring-1 focus:ring-primary transition-colors bg-base-100" placeholder="Kullanıcı adınızı girin" autofocus required id="{{ form.username.id_for_label }}">
+                    </div>
+                </div>
+                
+                <div class="form-control w-full relative">
+                    <label class="label pb-2">
+                        <span class="label-text font-semibold">Parola</span>
+                    </label>
+                    <div class="relative flex items-center">
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none text-base-content/40">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                            </svg>
+                        </div>
+                        <input type="password" name="{{ form.password.name }}" class="input input-bordered w-full pl-11 focus:border-primary focus:ring-1 focus:ring-primary transition-colors bg-base-100" placeholder="Parolanızı girin" required id="{{ form.password.id_for_label }}">
+                    </div>
+                </div>
+
+                <input type="hidden" name="next" value="{{ next }}" />
+
+                <div class="form-control mt-8 pt-2">
+                    <button type="submit" class="btn btn-primary btn-block text-lg shadow-lg hover:shadow-xl transition-shadow">Giriş Yap</button>
+                </div>
+            </form>
+
+            <div class="divider mt-8 text-base-content/60">Hesabınız yok mu?</div>
+
+            <div class="text-center mt-4">
+                <a href="{% url 'polls:register' %}" class="btn btn-outline btn-secondary btn-block">Yeni Hesap Oluştur</a>
             </div>
-        </form>
-
-        <div class="divider mt-6">Hesabınız yok mu?</div>
-
-        <div class="text-center">
-            <a href="{% url 'polls:register' %}" class="link link-secondary font-semibold">Yeni Hesap Oluştur</a>
         </div>
     </div>
 </div>

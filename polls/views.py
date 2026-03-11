@@ -88,6 +88,17 @@ class ResultsView(LoginRequiredMixin, generic.DetailView):
 @login_required
 def vote(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
+    
+    if question.is_expired:
+        return render(
+            request,
+            "polls/detail.html",
+            {
+                "question": question,
+                "error_message": "Bu anketin süresi dolmuştur, artık oy kullanamazsınız.",
+            },
+        )
+        
     try:
         selected_choice = question.choice_set.get(pk=request.POST["choice"])
     except (KeyError, Choice.DoesNotExist):
@@ -116,7 +127,7 @@ class MyPollsView(LoginRequiredMixin, generic.ListView):
 
 class PollCreateView(LoginRequiredMixin, generic.CreateView):
     model = Question
-    fields = ['question_text', 'is_public']
+    fields = ['question_text', 'is_public', 'end_date']
     template_name = "polls/poll_form.html"
     
     def form_valid(self, form):
@@ -129,7 +140,7 @@ class PollCreateView(LoginRequiredMixin, generic.CreateView):
 
 class PollManageView(LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView):
     model = Question
-    fields = ['question_text', 'is_public']
+    fields = ['question_text', 'is_public', 'end_date']
     template_name = "polls/poll_manage.html"
 
     def test_func(self):
