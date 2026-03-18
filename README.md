@@ -34,7 +34,7 @@ Projeyi yerel ortamınızda test etmek veya geliştirmeye katkı sağlamak için
 
 ```bash
 # 1. Depoyu yerel makinenize klonlayın
-git clone [https://github.com/kullaniciadiniz/proje-adiniz.git](https://github.com/kullaniciadiniz/proje-adiniz.git)
+git clone https://github.com/Omer-Murat/DjangoPolls.git
 
 # 2. Proje dizinine geçiş yapın
 cd proje-adiniz
