@@ -9,3 +9,6 @@ coverage/
 out.css
 foo.html
 test.html
+.agent/
+.vs/
+*.slnx
