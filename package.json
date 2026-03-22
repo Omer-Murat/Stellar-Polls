@@ -1,5 +1,5 @@
 {
-  "name": "django-anket",
+  "name": "stellar-polls",
   "version": "1.0.0",
   "description": "> Gelişmiş web standartlarına uygun olarak tasarlanmış, kullanıcı etkileşimli ve ölçeklenebilir bir Django anket uygulaması.",
   "main": "index.js",
