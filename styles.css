@@ -1,0 +1,72 @@
+@import "tailwindcss";
+@plugin "daisyui";
+@theme {
+  --color-cosmic-bg: #0B0F19;
+  --color-cosmic-accent: #06b6d4;
+  --color-cosmic-purple: #a855f7;
+  --color-cosmic-glass: rgba(11, 15, 25, 0.7);
+  
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-glow: glow 3s ease-in-out infinite;
+  --animate-fade-in: fade-in 0.8s ease-out;
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+  }
+
+  @keyframes glow {
+    0%, 100% { box-shadow: 0 0 10px rgba(6, 182, 212, 0.2), 0 0 20px rgba(168, 85, 247, 0.1); }
+    50% { box-shadow: 0 0 25px rgba(6, 182, 212, 0.4), 0 0 40px rgba(168, 85, 247, 0.2); }
+  }
+
+  @keyframes fade-in {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+}
+
+@layer base {
+  body {
+    @apply bg-[var(--color-cosmic-bg)] text-slate-200 selection:bg-cosmic-accent selection:text-white min-h-screen font-sans;
+    background-image: 
+      radial-gradient(circle at 20% 30%, rgba(168, 85, 247, 0.08) 0%, transparent 50%),
+      radial-gradient(circle at 80% 70%, rgba(6, 182, 212, 0.08) 0%, transparent 50%),
+      url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='2' cy='2' r='1' fill='white' fill-opacity='0.1'/%3E%3C/svg%3E");
+  }
+
+  h1, h2, h3 {
+    @apply font-bold tracking-tight;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl transition-all duration-500 overflow-hidden;
+  }
+  
+  .stellar-card {
+    /* Inherit glass-card manually to avoid build errors in v4 @apply */
+    @apply backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl transition-all duration-500 overflow-hidden;
+    @apply p-6 hover:border-cosmic-accent/40 hover:shadow-[0_0_40px_rgba(6,182,212,0.15)] hover:-translate-y-2 animate-fade-in;
+  }
+  
+  .btn-cosmic {
+    @apply btn border-none bg-gradient-to-r from-cosmic-purple to-cosmic-accent text-white hover:scale-105 active:scale-95 transition-all duration-300 shadow-lg hover:shadow-[0_0_20px_rgba(6,182,212,0.4)] h-auto py-3 px-6;
+  }
+
+  .neon-input {
+    @apply input bg-white/5 border-white/10 focus:border-cosmic-accent/50 focus:ring-4 focus:ring-cosmic-accent/10 focus:outline-none transition-all duration-300 rounded-xl;
+  }
+
+  .glass-navbar {
+    @apply sticky top-0 z-50 backdrop-blur-2xl bg-cosmic-bg/80 border-b border-white/5;
+  }
+
+  /* Fix for SVG icons not responding to height/width in raw HTML */
+  .stellar-card svg, .glass-navbar svg {
+    @apply inline-block align-middle;
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+}

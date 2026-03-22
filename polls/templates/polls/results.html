@@ -1,73 +1,61 @@
 {% extends "base.html" %}
 
+{% block title %}Stellar Results - {{ question.question_text }}{% endblock %}
+
 {% block content %}
-<div class="card w-full lg:w-2/3 mx-auto bg-base-100 shadow-2xl border border-base-200 mt-6 relative overflow-hidden">
-    <!-- Decorative background element -->
-    <div class="absolute -top-10 -right-10 w-32 h-32 bg-primary/10 rounded-full blur-2xl pointer-events-none"></div>
+<div class="animate-fade-in max-w-3xl mx-auto space-y-8">
+    <!-- Breadcrumbs -->
+    <div class="flex gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-slate-600">
+        <a href="{% url 'polls:index' %}" class="hover:text-cosmic-accent transition-colors">Keşif</a>
+        <span>/</span>
+        <span class="text-slate-400">Sonuçlar</span>
+    </div>
 
-    <div class="card-body py-8 md:py-10">
+    <div class="stellar-card p-0 overflow-hidden">
+        <!-- Header -->
+        <div class="p-8 md:p-12 border-b border-white/5 bg-white/5">
+            <h1 class="text-3xl md:text-4xl font-black text-white leading-tight">
+                {{ question.question_text }}
+            </h1>
+            <div class="flex items-center gap-3 mt-6">
+                <span class="px-3 py-1 bg-cosmic-purple/10 text-cosmic-purple text-[10px] font-black rounded-full uppercase tracking-widest border border-cosmic-purple/20">
+                    {{ total_votes }} TOPLAM OY
+                </span>
+                <span class="w-1.5 h-1.5 bg-slate-800 rounded-full"></span>
+                <span class="text-[10px] font-black text-slate-700 uppercase tracking-widest">VERİ ANALİZİ TAMAMLANDI</span>
+            </div>
+        </div>
 
-        <h1
-            class="card-title text-3xl md:text-4xl font-extrabold mb-8 text-base-content/90 border-b border-base-200 pb-4">
-            {{ question.question_text }}
-        </h1>
-
-        <div class="space-y-6 mb-10 relative z-10">
-            {% for choice in choices %}
-            <div
-                class="flex flex-col gap-2 p-4 rounded-xl {% if choice.votes > 0 %}bg-base-200/50{% else %}bg-base-100{% endif %} border border-base-200 transition-all hover:shadow-md">
-
-                <div class="flex justify-between items-end mb-1">
-                    <span class="text-lg font-bold text-base-content">{{ choice.choice_text }}</span>
-                    <div class="text-right">
-                        <span class="text-sm font-semibold text-base-content/70 mr-2">{{ choice.votes }} oy</span>
-                        <span class="badge badge-primary badge-lg font-bold">{{ choice.percentage }}%</span>
+        <div class="p-8 md:p-12 space-y-8">
+            <div class="space-y-6">
+                {% for choice in choices %}
+                <div class="space-y-3">
+                    <div class="flex justify-between items-end">
+                        <span class="text-lg font-bold text-white">{{ choice.choice_text }}</span>
+                        <div class="text-right flex items-center gap-3">
+                            <span class="text-[10px] font-black text-slate-600 uppercase tracking-widest">{{ choice.votes }} OY</span>
+                            <span class="text-xl font-black text-cosmic-accent">{{ choice.percentage }}%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="w-full h-3 bg-white/5 rounded-full overflow-hidden border border-white/5">
+                        <div class="bg-gradient-to-r from-cosmic-purple/50 to-cosmic-accent h-full rounded-full transition-all duration-1000 ease-out"
+                            style="width: {{ choice.percentage }}%;">
+                        </div>
                     </div>
                 </div>
-
-                <!-- Progress bar showing percentage -->
-                <div class="w-full bg-base-300 rounded-full h-4 overflow-hidden shadow-inner">
-                    <div class="bg-primary h-4 rounded-full transition-all duration-1000 ease-out flex items-center justify-end pr-2 text-[10px] text-primary-content font-bold"
-                        style="width: {{ choice.percentage }}%;">
-                    </div>
+                {% empty %}
+                <div class="p-8 text-center text-slate-600 uppercase font-black text-[10px] tracking-widest">
+                    Bu anket için henüz veri toplanmamış.
                 </div>
+                {% endfor %}
             </div>
-            {% empty %}
-            <div class="alert alert-warning shadow-sm">
-                <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none"
-                    viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                </svg>
-                <span>Bu soru için seçenek yok.</span>
+
+            <div class="pt-8 border-t border-white/5 flex flex-col sm:flex-row gap-6 items-center justify-between">
+                <a href="{% url 'polls:index' %}" class="text-[10px] font-black text-slate-600 hover:text-white transition-colors tracking-widest uppercase">KEŞİFEDE DÖN</a>
+                <a href="{% url 'polls:detail' question.id %}" class="btn-cosmic w-full sm:w-auto px-12 py-4 h-auto rounded-xl font-black text-xs tracking-widest uppercase">YENİDEN OYLA</a>
             </div>
-            {% endfor %}
         </div>
-
-        <div class="flex text-sm text-base-content/60 font-medium mb-8">
-            Kullanılan toplam oy: <span class="badge badge-neutral ml-2">{{ total_votes }}</span>
-        </div>
-
-        <div
-            class="card-actions flex flex-col sm:flex-row justify-between items-center gap-4 pt-6 border-t border-base-200">
-            <a href="{% url 'polls:detail' question.id %}" class="btn btn-outline btn-block sm:btn-wide flex gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                </svg>
-                Tekrar Oyla
-            </a>
-            <a href="{% url 'polls:index' %}" class="btn btn-primary btn-block sm:btn-wide flex gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                </svg>
-                Anketlere Dön
-            </a>
-        </div>
-
     </div>
 </div>
-{% endblock content %}
+{% endblock %}

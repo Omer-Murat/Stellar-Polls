@@ -1,0 +1,26 @@
+{
+  "name": "django-anket",
+  "version": "1.0.0",
+  "description": "> Gelişmiş web standartlarına uygun olarak tasarlanmış, kullanıcı etkileşimli ve ölçeklenebilir bir Django anket uygulaması.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Omer-Murat/Django-Anket.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Omer-Murat/Django-Anket/issues"
+  },
+  "homepage": "https://github.com/Omer-Murat/Django-Anket#readme",
+  "dependencies": {
+    "@tailwindcss/cli": "^4.2.2",
+    "daisyui": "^5.5.19",
+    "tailwindcss": "^4.2.2"
+  }
+}

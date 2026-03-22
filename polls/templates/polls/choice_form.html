@@ -1,29 +1,44 @@
 {% extends 'base.html' %}
 
-{% block title %}Seçenek Ekle/Düzenle - Django Anketleri{% endblock %}
+{% block title %}{% if object %}Seçeneği Güncelle{% else %}Yeni Seçenek Ekle{% endif %} - Django Anketleri{% endblock %}
 
 {% block content %}
-<div class="card w-full max-w-lg mx-auto bg-base-100 shadow-xl border border-base-200 mt-10">
-    <div class="card-body">
-        <h2 class="card-title text-2xl font-bold mb-6">
-            {% if object %}Seçeneği Güncelle{% else %}Yeni Seçenek Ekle{% endif %}
-        </h2>
+<div class="max-w-2xl mx-auto py-12 font-outfit" data-aos="fade-up">
+    <header class="mb-12">
+        <div class="inline-block px-3 py-1 bg-success/10 text-success rounded-full text-xs font-bold tracking-widest uppercase mb-4">
+            Yapılandırma
+        </div>
+        <h1 class="text-5xl font-extrabold text-base-content tracking-tighter leading-none mb-4">
+            {% if object %}Seçeneği<br><span class="text-success">Güncelle</span>{% else %}Yeni<br><span class="text-success">Seçenek Ekle</span>{% endif %}
+        </h1>
+        <p class="text-base-content/60">Anketinize yeni bir cevap şıkkı ekleyin veya mevcut olanı düzenleyin.</p>
+    </header>
 
-        <form method="post" action="" class="space-y-4">
+    <div class="bg-base-100 border-2 border-base-content/10 shadow-[20px_20px_0px_0px_rgba(0,0,0,0.03)] rounded-3xl p-8 sm:p-12">
+        <form method="post" action="" class="space-y-10">
             {% csrf_token %}
-            <div class="form-control w-full">
-                <label class="label font-bold text-base-content/80">Seçenek (Cevap)</label>
+            
+            <div class="group relative">
+                <label class="block text-[10px] font-bold uppercase tracking-[0.2em] text-base-content/40 mb-3 ml-1 group-focus-within:text-success transition-colors">
+                    Seçenek Metni (Cevap)
+                </label>
                 <input type="text" name="{{ form.choice_text.name }}"
-                    class="input input-lg input-bordered w-full font-semibold focus:input-primary"
-                    value="{{ form.choice_text.value|default_if_none:'' }}" placeholder="Örn: Mavi" required autofocus>
+                    class="w-full bg-transparent border-b-2 border-base-300 focus:border-success outline-none py-4 text-3xl font-bold transition-all placeholder:text-base-content/20"
+                    value="{{ form.choice_text.value|default_if_none:'' }}" 
+                    placeholder="Örn: Kesinlikle Katılıyorum" required autofocus>
                 {% if form.choice_text.errors %}
-                <label class="label text-error text-sm">{{ form.choice_text.errors.as_text }}</label>
+                <p class="text-error mt-2 text-sm font-bold">{{ form.choice_text.errors.as_text }}</p>
                 {% endif %}
             </div>
 
-            <div class="card-actions justify-end mt-8 pt-6 border-t border-base-200">
-                <a href="javascript:history.back()" class="btn btn-ghost">İptal</a>
-                <button type="submit" class="btn btn-success px-8 text-white shadow-md">Kaydet</button>
+            <div class="flex flex-col sm:flex-row items-center gap-4 pt-4">
+                <button type="submit" class="btn btn-success btn-lg flex-1 sm:flex-none px-12 rounded-full font-black text-lg tracking-tighter hover:scale-105 transition-transform shadow-xl shadow-success/20 text-white leading-none">
+                    {% if object %}GÜNCELLE{% else %}EKLE VE KAYDET{% endif %}
+                </button>
+                <a href="javascript:history.back()" 
+                    class="btn btn-ghost rounded-full px-8 text-base-content/40 hover:text-base-content transition-colors font-bold uppercase tracking-widest text-[10px]">
+                    VAZGEÇ
+                </a>
             </div>
         </form>
     </div>

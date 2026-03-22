@@ -1,110 +1,83 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
+
+{% block title %}Stellar Poll - {{ question.question_text }}{% endblock %}
 
 {% block content %}
-<div class="card w-full lg:w-2/3 mx-auto bg-base-100 shadow-2xl border border-base-200 mt-6 relative overflow-hidden">
-    <!-- Decorative background element -->
-    <div class="absolute -top-10 -left-10 w-32 h-32 bg-secondary/10 rounded-full blur-2xl pointer-events-none"></div>
+<div class="animate-fade-in max-w-3xl mx-auto space-y-8">
+    <!-- Breadcrumbs -->
+    <div class="flex gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-slate-600">
+        <a href="{% url 'polls:index' %}" class="hover:text-cosmic-accent transition-colors">Keşif</a>
+        <span>/</span>
+        <span class="text-slate-400">Detay</span>
+    </div>
 
-    <div class="card-body py-8 md:py-10">
-
-        <a href="{% url 'polls:index' %}"
-            class="btn btn-ghost btn-sm w-fit mb-4 gap-2 text-base-content/60 hover:text-primary transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
-                stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-            </svg>
-            Anketlere Dön
-        </a>
-
-        <div class="mb-8 flex flex-col items-start">
-            <div class="flex flex-wrap gap-2 mb-3">
-                <span class="badge badge-secondary badge-outline font-semibold uppercase tracking-wider text-xs">Anket
-                    Sorusu</span>
+    <div class="stellar-card overflow-hidden p-0">
+        <!-- Header -->
+        <div class="p-8 md:p-12 border-b border-white/5 bg-white/5">
+            <div class="flex flex-wrap gap-2 mb-6">
+                <span class="px-3 py-1 bg-cosmic-purple/10 text-cosmic-purple text-[10px] font-black rounded-full uppercase tracking-widest border border-cosmic-purple/20">ANKET SORUSU</span>
                 {% if question.end_date %}
                     {% if question.is_expired %}
-                    <span class="badge badge-error font-semibold uppercase tracking-wider text-xs gap-1">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" /></svg>
-                        Süresi Doldu
-                    </span>
+                    <span class="px-3 py-1 bg-red-500/10 text-red-500 text-[10px] font-black rounded-full uppercase tracking-widest border border-red-500/20">SÜRESİ DOLDU</span>
                     {% else %}
-                    <span class="badge badge-warning font-semibold uppercase tracking-wider text-xs gap-1">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd" /></svg>
-                        Bitiş: {{ question.end_date|date:"d M H:i" }}
-                    </span>
+                    <span class="px-3 py-1 bg-cosmic-accent/10 text-cosmic-accent text-[10px] font-black rounded-full uppercase tracking-widest border border-cosmic-accent/20">BİTİŞ: {{ question.end_date|date:"d M H:i" }}</span>
                     {% endif %}
                 {% endif %}
             </div>
             
-            <h1 class="card-title text-3xl md:text-4xl font-extrabold text-base-content/90 leading-tight">
+            <h1 class="text-3xl md:text-4xl font-black text-white leading-tight">
                 {{ question.question_text }}
             </h1>
-            <p class="text-sm text-base-content/50 mt-2 font-medium">{{ question.pub_date|timesince }} önce yayınlandı
-            </p>
+            <p class="text-[10px] text-slate-600 font-bold mt-4 uppercase tracking-[0.2em]">{{ question.start_date|timesince }} önce başlatıldı</p>
         </div>
 
-        {% if error_message %}
-        <div class="alert alert-error shadow-sm mb-6 rounded-xl border-l-4 border-error-content bg-error/10">
-            <div class="flex items-center gap-3">
-                <svg xmlns="http://www.w3.org/2000/svg" class="stroke-error flex-shrink-0 h-6 w-6" fill="none"
-                    viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+        <div class="p-8 md:p-12">
+            {% if error_message %}
+            <div class="mb-8 p-4 bg-red-500/10 border border-red-500/20 rounded-xl flex items-center gap-3 text-red-500 text-sm font-bold">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                 </svg>
-                <span class="text-error-content font-bold">{{ error_message }}</span>
+                {{ error_message }}
             </div>
-        </div>
-        {% endif %}
+            {% endif %}
 
-        {% if question.is_expired %}
-        <!-- Expired state UI -->
-        <div class="bg-base-200/50 border border-base-200 rounded-2xl p-8 text-center mt-6">
-            <div class="w-16 h-16 bg-base-300 rounded-full flex items-center justify-center mx-auto mb-4 text-base-content/60">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-            </div>
-            <h3 class="text-2xl font-bold mb-2">Bu Anket Sona Erdi</h3>
-            <p class="text-base-content/70 mb-6 max-w-md mx-auto">
-                {{ question.end_date|date:"d F Y, H:i" }} itibarıyla bu anketin oylama süresi dolmuştur. Yeni oy kullanılamaz, ancak mevcut sonuçları inceleyebilirsiniz.
-            </p>
-            <a href="{% url 'polls:results' question.id %}" class="btn btn-primary btn-lg shadow-md px-8 hover:-translate-y-1 transition-all">
-                Anket Sonuçlarını Gör
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                </svg>
-            </a>
-        </div>
-        {% else %}
-        <!-- Active voting form -->
-        <form action="{% url 'polls:vote' question.id %}" method="post" class="relative z-10">
-            {% csrf_token %}
-            <div class="form-control mb-10 space-y-4">
-                {% for choice in question.choice_set.all %}
-                <label
-                    class="label cursor-pointer justify-start gap-4 p-5 border-2 border-base-200 rounded-xl hover:border-primary hover:bg-primary/5 transition-all duration-200 group has-[:checked]:border-primary has-[:checked]:bg-primary/10 has-[:checked]:shadow-md">
-                    <input type="radio" name="choice" id="choice{{forloop.counter}}" value="{{choice.id}}"
-                        class="radio radio-primary radio-md transition-all group-hover:scale-110" required />
-                    <span
-                        class="label-text text-xl font-medium text-base-content/80 group-hover:text-base-content">{{choice.choice_text}}</span>
-                </label>
-                {% endfor %}
-            </div>
-
-            <div class="card-actions justify-end border-t border-base-200 pt-6">
-                <button type="submit"
-                    class="btn btn-primary btn-lg shadow-lg hover:shadow-xl transition-all btn-block sm:btn-wide group">
-                    Oy Ver
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                        class="h-5 w-5 ml-1 group-hover:translate-x-1 transition-transform" fill="none"
-                        viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            {% if question.is_expired %}
+            <!-- Expired state -->
+            <div class="text-center py-8">
+                <div class="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-6 text-slate-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                </button>
+                </div>
+                <h3 class="text-2xl font-black text-white tracking-widest uppercase mb-4">BU ANKET SONA ERDİ</h3>
+                <p class="text-slate-500 mb-8 max-w-md mx-auto text-xs font-bold uppercase tracking-widest leading-relaxed">
+                    {{ question.end_date|date:"d F Y, H:i" }} itibarıyla oylama süresi dolmuştur.
+                </p>
+                <a href="{% url 'polls:results' question.id %}" class="btn-cosmic px-12 py-4 h-auto rounded-xl font-black text-xs tracking-widest inline-block">SONUÇLARI İNCELE</a>
             </div>
-        </form>
-        {% endif %}
+            {% else %}
+            <!-- Voting form -->
+            <form action="{% url 'polls:vote' question.id %}" method="post" class="space-y-6">
+                {% csrf_token %}
+                <div class="space-y-3">
+                    {% for choice in question.choice_set.all %}
+                    <label class="group flex items-center justify-between p-6 bg-white/5 border border-white/5 rounded-2xl cursor-pointer hover:border-cosmic-accent/30 hover:bg-cosmic-accent/5 transition-all outline-none has-[:checked]:border-cosmic-accent has-[:checked]:bg-cosmic-accent/10">
+                        <div class="flex items-center gap-4">
+                            <input type="radio" name="choice" id="choice{{forloop.counter}}" value="{{choice.id}}"
+                                class="radio radio-primary border-white/20 checked:bg-cosmic-accent" required />
+                            <span class="text-lg font-bold text-slate-400 group-hover:text-white transition-colors">{{choice.choice_text}}</span>
+                        </div>
+                    </label>
+                    {% endfor %}
+                </div>
 
+                <div class="pt-8 border-t border-white/5 flex flex-col sm:flex-row gap-6 items-center justify-between">
+                    <a href="{% url 'polls:results' question.id %}" class="text-[10px] font-black text-slate-600 hover:text-white transition-colors tracking-widest uppercase">SONUÇLARI GÖR</a>
+                    <button type="submit" class="btn-cosmic w-full sm:w-auto px-16 py-4 h-auto rounded-xl font-black text-xs tracking-widest uppercase">OY VER</button>
+                </div>
+            </form>
+            {% endif %}
+        </div>
     </div>
 </div>
-{% endblock content %}
+{% endblock %}

@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "npx @tailwindcss/cli -i ./src/styles.css -o ../static/theme/css/styles.css",
-    "watch": "npx @tailwindcss/cli -i ./src/styles.css -o ../static/theme/css/styles.css --watch"
+    "build": "npx tailwindcss -i ./src/styles.css -o ../static/theme/css/styles.css --minify",
+    "watch": "npx tailwindcss -i ./src/styles.css -o ../static/theme/css/styles.css --watch"
   },
   "keywords": [],
   "author": "",
@@ -13,7 +13,9 @@
   "type": "commonjs",
   "devDependencies": {
     "@tailwindcss/cli": "^4.2.1",
-    "daisyui": "^5.5.19",
-    "tailwindcss": "^4.2.1"
+    "autoprefixer": "^10.4.27",
+    "daisyui": "^4.12.10",
+    "postcss": "^8.5.8",
+    "tailwindcss": "^3.4.1"
   }
 }

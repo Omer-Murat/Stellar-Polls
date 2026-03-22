@@ -1,4 +1,5 @@
-from django.db.models import F
+from django.db.models import F, Count, Q
+import json
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse, reverse_lazy
@@ -8,6 +9,8 @@ from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.models import User
+from .forms import PollForm
 
 class RegisterView(generic.CreateView):
     form_class = UserCreationForm
@@ -32,9 +35,24 @@ class IndexView(LoginRequiredMixin, generic.ListView):
         published in the future, and only those that are public).
         """
         return Question.objects.filter(
-            pub_date__lte=timezone.now(),
+            start_date__lte=timezone.now(),
             is_public=True
-        ).order_by("-pub_date")[:5]
+        ).annotate(total_votes_count=Count('vote')).order_by("-start_date")[:5]
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        now = timezone.now()
+        
+        # Calculate statistics efficiently using Q objects
+        stats = Question.objects.aggregate(
+            total_active_polls=Count('id', filter=Q(is_public=True) & (Q(end_date__isnull=True) | Q(end_date__gt=now))),
+            total_finished_polls=Count('id', filter=Q(end_date__lt=now))
+        )
+        
+        context.update(stats)
+        context['total_users'] = User.objects.count()
+        context['total_polls'] = Question.objects.count()
+        return context
 
 
 class DetailView(LoginRequiredMixin, generic.DetailView):
@@ -43,7 +61,24 @@ class DetailView(LoginRequiredMixin, generic.DetailView):
     
     def get_queryset(self):
         """Excludes any questions that aren't published yet."""
-        return Question.objects.filter(pub_date__lte=timezone.now())
+        return Question.objects.filter(start_date__lte=timezone.now())
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        question = self.get_object()
+        user_voted = Vote.objects.filter(user=self.request.user, question=question).exists()
+        context['user_voted'] = user_voted
+        
+        if user_voted or question.is_finished:
+            choices = question.choice_set.all()
+            total_votes = sum(choice.votes for choice in choices)
+            context['choices'] = choices
+            context['total_votes'] = total_votes
+            context['chart_labels_json'] = json.dumps([c.choice_text for c in choices])
+            context['chart_data_json'] = json.dumps([c.votes for c in choices])
+            for choice in choices:
+                choice.percentage = int((choice.votes / total_votes) * 100) if total_votes > 0 else 0
+        return context
 
 
 class ResultsView(LoginRequiredMixin, generic.DetailView):
@@ -53,30 +88,22 @@ class ResultsView(LoginRequiredMixin, generic.DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         question = context['question']
+        choices = question.choice_set.all()
         
         # Calculate total votes
-        total_votes = sum(choice.votes for choice in question.choice_set.all())
+        total_votes = sum(choice.votes for choice in choices)
         context['total_votes'] = total_votes
         
-        # Calculate percentages and attach to choices, ensuring they sum to 100
-        choices = list(question.choice_set.all())
+        # Data for Chart.js
+        chart_labels = [choice.choice_text for choice in choices]
+        chart_data = [choice.votes for choice in choices]
+        context['chart_labels_json'] = json.dumps(chart_labels)
+        context['chart_data_json'] = json.dumps(chart_data)
+        
+        # Calculate percentages for standard display
         if total_votes > 0:
-            # calculate exact float percentages
             for choice in choices:
-                choice.exact_percentage = (choice.votes / total_votes) * 100
-                choice.percentage = int(choice.exact_percentage) # floor to start
-            
-            # calculate how much percentage is missing from 100
-            current_sum = sum(choice.percentage for choice in choices)
-            remainder = 100 - current_sum
-            
-            # distribute remainder to choices with highest fractional part
-            choices.sort(key=lambda c: c.exact_percentage - c.percentage, reverse=True)
-            for i in range(remainder):
-                choices[i].percentage += 1
-                
-            # restore original order (e.g., by id)
-            choices.sort(key=lambda c: c.id)
+                choice.percentage = int((choice.votes / total_votes) * 100)
         else:
             for choice in choices:
                 choice.percentage = 0
@@ -89,30 +116,46 @@ class ResultsView(LoginRequiredMixin, generic.DetailView):
 def vote(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     
-    if question.is_expired:
-        return render(
-            request,
-            "polls/detail.html",
-            {
-                "question": question,
-                "error_message": "Bu anketin süresi dolmuştur, artık oy kullanamazsınız.",
-            },
-        )
+    # 1. Protection: Check if already voted
+    if Vote.objects.filter(user=request.user, question=question).exists():
+        from django.contrib import messages
+        messages.warning(request, "Bu ankete daha önce oy verdiniz.")
+        if request.headers.get('HX-Request'):
+             return render(request, "polls/partials/vote_notification.html", {"message": "Daha önce oy verdiniz!", "type": "warning"})
+        return HttpResponseRedirect(reverse("polls:results", args=(question.id,)))
+
+    # 2. Protection: Expiration check
+    if question.is_finished:
+        if request.headers.get('HX-Request'):
+             return render(request, "polls/partials/vote_notification.html", {"message": "Anket süresi doldu.", "type": "error"})
+        return render(request, "polls/detail.html", {"question": question, "error_message": "Anket süresi doldu."})
         
     try:
         selected_choice = question.choice_set.get(pk=request.POST["choice"])
     except (KeyError, Choice.DoesNotExist):
-        return render(
-            request,
-            "polls/detail.html",
-            {
-                "question": question,
-                "error_message": "Herhangi bir seçenek belirlemediniz.",
-            },
-        )
+        return render(request, "polls/detail.html", {"question": question, "error_message": "Geçerli bir seçenek belirlemediniz."})
     else:
+        # Create Vote
+        Vote.objects.create(user=request.user, question=question, choice=selected_choice)
+        # Update choice votes count
         selected_choice.votes = F("votes") + 1
         selected_choice.save()
+
+        if request.headers.get('HX-Request'):
+            # Manual context data prep for partial to match ResultsView
+            choices = question.choice_set.all()
+            total_votes_agg = sum(choice.votes for choice in choices)
+            chart_labels = [choice.choice_text for choice in choices]
+            chart_data = [choice.votes for choice in choices]
+            context = {
+                "question": question,
+                "choices": choices,
+                "total_votes": total_votes_agg,
+                "chart_labels_json": json.dumps(chart_labels),
+                "chart_data_json": json.dumps(chart_data),
+            }
+            return render(request, "polls/partials/vote_results_partial.html", context)
+
         return HttpResponseRedirect(reverse("polls:results", args=(question.id,)))
 
 # --- USER POLL MANAGEMENT VIEWS ---
@@ -123,16 +166,18 @@ class MyPollsView(LoginRequiredMixin, generic.ListView):
 
     def get_queryset(self):
         """Return polls authored by the logged in user."""
-        return Question.objects.filter(author=self.request.user).order_by("-pub_date")
+        return Question.objects.filter(author=self.request.user).order_by("-start_date")
 
 class PollCreateView(LoginRequiredMixin, generic.CreateView):
     model = Question
-    fields = ['question_text', 'is_public', 'end_date']
+    form_class = PollForm
     template_name = "polls/poll_form.html"
     
     def form_valid(self, form):
         form.instance.author = self.request.user
-        form.instance.pub_date = timezone.now()
+        # Start date handling if not provided
+        if not form.cleaned_data.get('start_date'):
+            form.instance.start_date = timezone.now()
         return super().form_valid(form)
         
     def get_success_url(self):
@@ -140,7 +185,7 @@ class PollCreateView(LoginRequiredMixin, generic.CreateView):
 
 class PollManageView(LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView):
     model = Question
-    fields = ['question_text', 'is_public', 'end_date']
+    form_class = PollForm
     template_name = "polls/poll_manage.html"
 
     def test_func(self):

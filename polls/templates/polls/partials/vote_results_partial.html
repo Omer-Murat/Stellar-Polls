@@ -1,0 +1,70 @@
+<div id="results-container" class="animate-fade-in">
+    <h2 class="text-2xl font-bold mb-6 text-center text-primary">Anket Sonuçları</h2>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+        <!-- Text Results -->
+        <div class="space-y-4">
+            {% for choice in choices %}
+            <div>
+                <div class="flex justify-between mb-1">
+                    <span class="font-medium">{{ choice.choice_text }}</span>
+                    <span class="text-sm font-bold text-secondary">{{ choice.votes }} Oy (%{{ choice.percentage }})</span>
+                </div>
+                <progress class="progress progress-primary w-full h-3 shadow-inner" value="{{ choice.percentage }}" max="100"></progress>
+            </div>
+            {% endfor %}
+            <div class="mt-6 pt-4 border-t border-base-300 flex justify-between items-center">
+                <span class="text-lg font-bold">Toplam Oy:</span>
+                <span class="badge badge-lg badge-neutral p-4">{{ total_votes }}</span>
+            </div>
+        </div>
+
+        <!-- Chart Container -->
+        <div class="bg-base-200/50 p-6 rounded-3xl border border-base-300 shadow-inner">
+            <canvas id="resultsChartPartial"></canvas>
+        </div>
+    </div>
+
+    <!-- Chart.js Script for Partial -->
+    <script>
+        (function() {
+            const ctx = document.getElementById('resultsChartPartial');
+            if (ctx) {
+                new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: JSON.parse('{{ chart_labels_json|safe }}'),
+                        datasets: [{
+                            data: JSON.parse('{{ chart_data_json|safe }}'),
+                            backgroundColor: [
+                                '#FB923C', // Orange
+                                '#A855F7', // Purple
+                                '#EC4899', // Pink
+                                '#3B82F6', // Blue
+                                '#10B981', // Emerald
+                                '#F59E0B'  // Amber
+                            ],
+                            borderWidth: 0,
+                            hoverOffset: 20
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    color: 'oklch(var(--bc))',
+                                    padding: 20,
+                                    font: { size: 14, weight: 'bold' }
+                                }
+                            }
+                        },
+                        cutout: '70%',
+                        animation: { animateScale: true, animateRotate: true }
+                    }
+                });
+            }
+        })();
+    </script>
+</div>
