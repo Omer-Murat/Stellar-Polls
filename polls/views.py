@@ -1,4 +1,4 @@
-from django.db.models import F, Count, Q
+from django.db.models import F, Count, Q, Case, When, Value, IntegerField, Exists, OuterRef
 import json
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
@@ -22,22 +22,52 @@ class RegisterView(generic.CreateView):
         login(self.request, user)
         return super().form_valid(form)
 
-from .models import Choice, Question
+from .models import Choice, Question, Vote
 
 
-class IndexView(LoginRequiredMixin, generic.ListView):
+class IndexView(generic.ListView):
     template_name = "polls/index.html"
     context_object_name = "latest_question_list"
+    paginate_by = 20
 
     def get_queryset(self):
         """
-        Return the last five published questions (not including those set to be
-        published in the future, and only those that are public).
+        Return published and approved questions, sorting:
+        1. Active & Not Voted (High)
+        2. Active & Voted (Mid)
+        3. Finished (Low)
         """
-        return Question.objects.filter(
-            start_date__lte=timezone.now(),
-            is_public=True
-        ).annotate(total_votes_count=Count('vote')).order_by("-start_date")[:5]
+        now = timezone.now()
+        user = self.request.user
+        
+        qs = Question.objects.filter(
+            start_date__lte=now,
+            is_public=True,
+            is_approved=True
+        ).annotate(
+            total_votes_count=Count('vote'),
+            finished_status=Case(
+                When(end_date__isnull=False, end_date__lt=now, then=Value(1)),
+                default=Value(0),
+                output_field=IntegerField(),
+            )
+        )
+
+        if user.is_authenticated:
+            # Subquery to check if user has voted
+            voted_subquery = Vote.objects.filter(user=user, question=OuterRef('pk'))
+            qs = qs.annotate(has_voted=Case(
+                When(Exists(voted_subquery), then=Value(1)),
+                default=Value(0),
+                output_field=IntegerField(),
+            ))
+            # Sort order: 
+            # finished_status (0 for active, 1 for finished) - Active first
+            # has_voted (0 for not voted, 1 for voted) - Not voted first
+            # -start_date - Newest first
+            return qs.order_by('finished_status', 'has_voted', "-start_date")
+        
+        return qs.order_by('finished_status', "-start_date")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -45,28 +75,64 @@ class IndexView(LoginRequiredMixin, generic.ListView):
         
         # Calculate statistics efficiently using Q objects
         stats = Question.objects.aggregate(
-            total_active_polls=Count('id', filter=Q(is_public=True) & (Q(end_date__isnull=True) | Q(end_date__gt=now))),
-            total_finished_polls=Count('id', filter=Q(end_date__lt=now))
+            total_active_polls=Count('id', filter=Q(is_public=True) & Q(is_approved=True) & (Q(end_date__isnull=True) | Q(end_date__gt=now))),
+            total_finished_polls=Count('id', filter=Q(is_approved=True) & Q(end_date__lt=now))
         )
         
         context.update(stats)
         context['total_users'] = User.objects.count()
         context['total_polls'] = Question.objects.count()
+
+        # Advanced Pagination: 1 ... 4 5 6 [7] 8 9 10 ... 25
+        if context.get('is_paginated'):
+            context['elided_range'] = context['paginator'].get_elided_page_range(
+                context['page_obj'].number, on_each_side=3, on_ends=1
+            )
         return context
 
 
-class DetailView(LoginRequiredMixin, generic.DetailView):
+class DetailView(generic.DetailView):
     model = Question
     template_name = "polls/detail.html"
     
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        user = self.request.user
+        
+        # If user already voted or poll is finished, go to results
+        already_voted = user.is_authenticated and Vote.objects.filter(user=user, question=self.object).exists()
+        if self.object.is_finished or already_voted:
+            return HttpResponseRedirect(reverse("polls:results", args=(self.object.id,)))
+            
+        return super().get(request, *args, **kwargs)
+    
     def get_queryset(self):
-        """Excludes any questions that aren't published yet."""
-        return Question.objects.filter(start_date__lte=timezone.now())
+        """
+        Excludes any questions that aren't published yet.
+        Also restricts unapproved polls to their authors.
+        """
+        user = self.request.user
+        if user.is_authenticated and user.is_staff:
+            return Question.objects.all()
+        
+        # Public queryset (approved and started)
+        public_q = Q(is_approved=True) & Q(start_date__lte=timezone.now())
+        
+        if user.is_authenticated:
+            # Authors can see their own polls even if unapproved
+            return Question.objects.filter(Q(author=user) | public_q)
+        
+        return Question.objects.filter(public_q)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         question = self.get_object()
-        user_voted = Vote.objects.filter(user=self.request.user, question=question).exists()
+        user = self.request.user
+        
+        user_voted = False
+        if user.is_authenticated:
+            user_voted = Vote.objects.filter(user=user, question=question).exists()
+        
         context['user_voted'] = user_voted
         
         if user_voted or question.is_finished:
@@ -81,9 +147,23 @@ class DetailView(LoginRequiredMixin, generic.DetailView):
         return context
 
 
-class ResultsView(LoginRequiredMixin, generic.DetailView):
+class ResultsView(generic.DetailView):
     model = Question
     template_name = "polls/results.html"
+    
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_authenticated and user.is_staff:
+            return Question.objects.all()
+        
+        # Public queryset (approved and started)
+        public_q = Q(is_approved=True) & Q(start_date__lte=timezone.now())
+        
+        if user.is_authenticated:
+            # Authors can see their own results even if unapproved
+            return Question.objects.filter(Q(author=user) | public_q)
+        
+        return Question.objects.filter(public_q)
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -114,7 +194,15 @@ class ResultsView(LoginRequiredMixin, generic.DetailView):
 
 @login_required
 def vote(request, question_id):
-    question = get_object_or_404(Question, pk=question_id)
+    user = request.user
+    if user.is_staff:
+        question = get_object_or_404(Question, pk=question_id)
+    else:
+        # Same logic as get_queryset: only authors or approved+started
+        question = get_object_or_404(
+            Question, 
+            Q(pk=question_id) & (Q(author=user) | (Q(is_approved=True) & Q(start_date__lte=timezone.now())))
+        )
     
     # 1. Protection: Check if already voted
     if Vote.objects.filter(user=request.user, question=question).exists():
@@ -128,7 +216,7 @@ def vote(request, question_id):
     if question.is_finished:
         if request.headers.get('HX-Request'):
              return render(request, "polls/partials/vote_notification.html", {"message": "Anket süresi doldu.", "type": "error"})
-        return render(request, "polls/detail.html", {"question": question, "error_message": "Anket süresi doldu."})
+        return HttpResponseRedirect(reverse("polls:results", args=(question.id,)))
         
     try:
         selected_choice = question.choice_set.get(pk=request.POST["choice"])
@@ -163,10 +251,25 @@ def vote(request, question_id):
 class MyPollsView(LoginRequiredMixin, generic.ListView):
     template_name = "polls/my_polls.html"
     context_object_name = "latest_question_list"
+    paginate_by = 20
 
     def get_queryset(self):
         """Return polls authored by the logged in user."""
         return Question.objects.filter(author=self.request.user).order_by("-start_date")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Add polls that the user has voted on, including their participant count
+        context['voted_polls'] = Question.objects.filter(
+            vote__user=self.request.user
+        ).annotate(total_votes_count=Count('vote')).order_by('-start_date')
+
+        # Advanced Pagination: 1 ... 4 5 6 [7] 8 9 10 ... 25
+        if context.get('is_paginated'):
+            context['elided_range'] = context['paginator'].get_elided_page_range(
+                context['page_obj'].number, on_each_side=3, on_ends=1
+            )
+        return context
 
 class PollCreateView(LoginRequiredMixin, generic.CreateView):
     model = Question

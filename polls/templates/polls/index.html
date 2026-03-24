@@ -14,7 +14,7 @@
             </div>
             <h1 class="text-5xl md:text-7xl font-black mb-8 leading-tight tracking-tight text-white">
                 Geleceği <br/>
-                <span class="text-transparent bg-clip-text bg-gradient-to-r from-cosmic-purple via-cosmic-accent to-cosmic-purple bg-[length:200%_auto] animate-[gradient_4s_linear_infinite]">Stellar</span> ile Oylayın.
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-cosmic-cyan via-cosmic-accent to-cosmic-cyan bg-[length:200%_auto] animate-[gradient_4s_linear_infinite]">Stellar</span> ile Oylayın.
             </h1>
             <p class="text-xl text-slate-300 max-w-xl mx-auto md:mx-0 leading-relaxed font-medium">
                 Kamuoyunun yıldız haritasını çıkarın. Şeffaf, hızlı ve kozmik hızda anketler ile geleceği birlikte şekillendirelim.
@@ -27,7 +27,7 @@
         
         <!-- Decorative Orb -->
         <div class="relative hidden lg:block">
-            <div class="w-80 h-80 rounded-full bg-gradient-to-br from-cosmic-purple/20 via-cosmic-accent/20 to-transparent blur-3xl animate-pulse"></div>
+            <div class="w-80 h-80 rounded-full bg-gradient-to-br from-cosmic-cyan/20 via-cosmic-accent/20 to-transparent blur-3xl animate-pulse"></div>
             <div class="absolute inset-0 flex items-center justify-center">
                 <div class="w-48 h-48 rounded-full border border-white/10 animate-[spin_10s_linear_infinite] flex items-center justify-center">
                     <div class="w-32 h-32 rounded-full border border-cosmic-accent/20 animate-[spin_5s_linear_infinite_reverse]"></div>
@@ -59,7 +59,7 @@
         <!-- Finished Polls -->
         <div class="stellar-card group">
             <div class="flex items-center gap-4">
-                <div class="p-3 bg-cosmic-purple/10 rounded-xl text-cosmic-purple group-hover:scale-110 transition-transform">
+                <div class="p-3 bg-cosmic-accent/10 rounded-xl text-cosmic-accent group-hover:scale-110 transition-transform">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
@@ -115,9 +115,13 @@
         {% if latest_question_list %}
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {% for question in latest_question_list %}
-            <div class="stellar-card p-0 flex flex-col h-full group">
+            <div class="stellar-card p-0 flex flex-col h-full group {% if question.is_finished %}opacity-40 grayscale-[0.6] brightness-75 scale-[0.98] blur-[0.3px] hover:opacity-100 hover:grayscale-0 hover:brightness-100 hover:scale-100 hover:blur-none transition-all duration-500{% endif %}">
                 <div class="p-8 pb-4">
                     <div class="flex justify-between items-start mb-6">
+                        <div class="flex gap-2">
+                        {% if question.has_voted %}
+                            <span class="px-2 py-0.5 bg-green-500/10 text-green-500 text-[9px] font-black rounded-lg uppercase tracking-widest border border-green-500/20">OYLANDI</span>
+                        {% endif %}
                         {% if question.is_finished %}
                             <span class="px-2 py-0.5 bg-red-500/10 text-red-500 text-[9px] font-black rounded-lg uppercase tracking-widest border border-red-500/20">TAMAMLANDI</span>
                         {% elif question.end_date %}
@@ -125,6 +129,7 @@
                         {% else %}
                             <span class="px-2 py-0.5 bg-slate-500/10 text-slate-400 text-[9px] font-black rounded-lg uppercase tracking-widest border border-white/5">SONSUZ</span>
                         {% endif %}
+                        </div>
                         
                         <div class="flex items-center gap-1 text-[9px] font-black text-slate-500">
                              <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -160,6 +165,12 @@
             </div>
             {% endfor %}
         </div>
+
+        <!-- Modern Professional Pagination -->
+        {% if is_paginated %}
+            {% include "polls/partials/professional_pagination.html" %}
+        {% endif %}
+
         {% else %}
         <div class="stellar-card p-20 text-center border-dashed border-white/5">
             <div class="bg-white/5 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-8 border border-white/5">

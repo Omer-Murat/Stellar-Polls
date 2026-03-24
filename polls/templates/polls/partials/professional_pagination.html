@@ -1,0 +1,53 @@
+
+<div class="stellar-pagination-system flex flex-wrap justify-center items-center gap-4 py-12 select-none">
+    
+    <!-- FIRST & PREV -->
+    {% if page_obj.has_previous %}
+    <div class="flex items-center gap-2">
+        <a href="?page=1" class="w-10 h-10 flex items-center justify-center rounded-xl bg-white/5 border border-white/10 text-slate-500 hover:text-cosmic-accent hover:border-cosmic-accent/50 hover:bg-cosmic-accent/5 transition-all duration-300 group" title="İlk Sayfa">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
+            </svg>
+        </a>
+        <a href="?page={{ page_obj.previous_page_number }}" class="w-10 h-10 flex items-center justify-center rounded-xl bg-white/5 border border-white/10 text-slate-500 hover:text-cosmic-accent hover:border-cosmic-accent/50 hover:bg-cosmic-accent/5 transition-all duration-300 group" title="Önceki">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7" />
+            </svg>
+        </a>
+    </div>
+    {% endif %}
+
+    <!-- PAGE NUMBERS -->
+    <div class="flex items-center gap-2 px-4 py-2 bg-white/[0.02] border border-white/5 rounded-2xl backdrop-blur-sm">
+        {% for i in elided_range %}
+            {% if i == page_obj.number %}
+            <div class="w-10 h-10 flex items-center justify-center rounded-xl bg-cosmic-accent text-cosmic-bg font-black text-sm shadow-[0_0_20px_rgba(6,182,212,0.4)] transition-all">
+                {{ i }}
+            </div>
+            {% elif i == paginator.ELLIPSIS %}
+            <span class="w-8 h-10 flex items-center justify-center text-slate-700 font-extrabold tracking-widest text-lg">...</span>
+            {% else %}
+            <a href="?page={{ i }}" class="w-10 h-10 flex items-center justify-center rounded-xl bg-white/5 border border-white/10 text-slate-400 hover:text-white hover:border-white/20 hover:bg-white/10 transition-all duration-300 font-bold text-sm">
+                {{ i }}
+            </a>
+            {% endif %}
+        {% endfor %}
+    </div>
+
+    <!-- NEXT & LAST -->
+    {% if page_obj.has_next %}
+    <div class="flex items-center gap-2">
+        <a href="?page={{ page_obj.next_page_number }}" class="w-10 h-10 flex items-center justify-center rounded-xl bg-white/5 border border-white/10 text-slate-500 hover:text-cosmic-accent hover:border-cosmic-accent/50 hover:bg-cosmic-accent/5 transition-all duration-300 group" title="Sonraki">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7" />
+            </svg>
+        </a>
+        <a href="?page={{ paginator.num_pages }}" class="w-10 h-10 flex items-center justify-center rounded-xl bg-white/5 border border-white/10 text-slate-500 hover:text-cosmic-accent hover:border-cosmic-accent/50 hover:bg-cosmic-accent/5 transition-all duration-300 group" title="En Sona">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M13 5l7 7-7 7M5 5l7 7-7 7" />
+            </svg>
+        </a>
+    </div>
+    {% endif %}
+
+</div>

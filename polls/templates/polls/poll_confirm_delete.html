@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Anketi Sil - Django Anketleri{% endblock %}
+{% block title %}Anketi Sil - Stellar Polls{% endblock %}
 
 {% block content %}
 <div class="max-w-2xl mx-auto py-20 font-outfit" data-aos="zoom-in">
@@ -8,31 +8,31 @@
         <!-- Abstract Danger Pattern -->
         <div class="absolute -top-10 -right-10 w-40 h-40 bg-error/5 rounded-full blur-3xl"></div>
         
-        <div class="w-24 h-24 rounded-3xl bg-error/10 flex items-center justify-center text-error mx-auto mb-10 rotate-3 group-hover:rotate-0 transition-transform">
+        <div class="w-24 h-24 rounded-3xl bg-red-500/10 flex items-center justify-center text-red-500 mx-auto mb-10 rotate-3 transition-transform">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
             </svg>
         </div>
 
-        <h2 class="text-4xl font-extrabold tracking-tighter text-base-content mb-6 leading-tight">
-            Bu Anketi Silmek<br><span class="text-error uppercase tracking-normal">Emin Misiniz?</span>
+        <h2 class="text-4xl font-extrabold tracking-tighter text-white mb-6 leading-tight">
+            Bu Anketi Silmekten<br><span class="text-red-500 uppercase tracking-normal">Emin Misiniz?</span>
         </h2>
         
-        <div class="bg-base-200/50 rounded-2xl p-6 mb-10 border border-base-content/5 text-left">
-            <p class="text-[10px] font-black uppercase tracking-[0.2em] text-base-content/30 mb-2">Silinecek Öğe:</p>
-            <p class="text-xl font-bold text-base-content/80">"{{ object.question_text }}"</p>
+        <div class="bg-white/5 rounded-2xl p-6 mb-10 border border-white/5 text-left">
+            <p class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 mb-2">Silinecek Öğe:</p>
+            <p class="text-xl font-bold text-white/80">"{{ object.question_text }}"</p>
         </div>
 
-        <p class="text-sm font-bold text-base-content/40 uppercase tracking-widest leading-relaxed mb-12">
-            İÇİNDEKİ TÜM SEÇENEKLER VE VERİLEN <span class="text-error">TÜM OYLAR</span> KALICI OLARAK YOK EDİLECEKTİR. BU İŞLEMİN GERİ DÖNÜŞÜ YOKTUR.
+        <p class="text-sm font-bold text-slate-500 uppercase tracking-widest leading-relaxed mb-12">
+            İÇİNDEKİ TÜM SEÇENEKLER VE VERİLEN <span class="text-red-500">TÜM OYLAR</span> KALICI OLARAK YOK EDİLECEKTİR. BU İŞLEMİN GERİ DÖNÜŞÜ YOKTUR.
         </p>
 
-        <form method="post" action="" class="flex flex-col sm:flex-row gap-4">
+        <form method="post" action="" class="flex flex-col sm:flex-row gap-6">
             {% csrf_token %}
-            <button type="submit" class="btn btn-error btn-lg flex-1 rounded-full font-black tracking-tighter text-white shadow-xl shadow-error/20 hover:scale-105 transition-transform order-2 sm:order-1">
+            <button type="submit" class="w-full py-4 bg-red-500 text-white rounded-xl font-black text-sm tracking-widest uppercase hover:bg-red-600 transition-all shadow-xl shadow-red-500/20">
                 EVET, KALICI OLARAK SİL
             </button>
-            <a href="{% url 'polls:manage' object.id %}" class="btn btn-ghost btn-lg flex-1 rounded-full font-bold tracking-widest text-[10px] uppercase order-1 sm:order-2">
+            <a href="{% url 'polls:manage' object.id %}" class="w-full py-4 border border-white/10 text-slate-500 hover:text-white rounded-xl font-black text-sm tracking-widest uppercase transition-all flex items-center justify-center">
                 VAZGEÇ
             </a>
         </form>

@@ -11,7 +11,7 @@
                 Kontrol Paneli
             </div>
             <h1 class="text-4xl md:text-5xl font-black text-white leading-tight">
-                Kendi <span class="text-cosmic-purple">Anketlerim</span>
+                Kendi <span class="text-cosmic-accent">Anketlerim</span>
             </h1>
             <p class="text-slate-500 mt-4 max-w-md">Oluşturduğunuz tüm anketleri buradan yönetebilir, sonuçları inceleyebilir veya yeni evrenler başlatabilirsiniz.</p>
         </div>
@@ -31,7 +31,9 @@
             <div>
                 <div class="flex justify-between items-start mb-6">
                     <div class="flex gap-2">
-                        {% if question.is_expired %}
+                        {% if not question.is_approved %}
+                        <span class="px-2 py-0.5 bg-cosmic-accent/10 text-cosmic-accent text-[10px] font-black rounded uppercase tracking-widest border border-cosmic-accent/20">ONAY BEKLİYOR</span>
+                        {% elif question.is_expired %}
                         <span class="px-2 py-0.5 bg-red-500/10 text-red-500 text-[10px] font-black rounded uppercase tracking-widest border border-red-500/20">BİTTİ</span>
                         {% elif question.is_public %}
                         <span class="px-2 py-0.5 bg-cosmic-accent/10 text-cosmic-accent text-[10px] font-black rounded uppercase tracking-widest border border-cosmic-accent/20">AKTİF</span>
@@ -65,7 +67,7 @@
                 <a href="{% url 'polls:detail' question.id %}" class="flex-grow py-3 px-4 bg-white/5 hover:bg-white/10 text-white rounded-xl text-[10px] font-black tracking-widest uppercase text-center transition-all">
                     GÖRÜNTÜLE
                 </a>
-                <a href="{% url 'polls:manage' question.id %}" class="w-12 h-12 flex items-center justify-center bg-cosmic-purple/10 hover:bg-cosmic-purple/20 text-cosmic-purple rounded-xl transition-all">
+                <a href="{% url 'polls:manage' question.id %}" class="w-12 h-12 flex items-center justify-center bg-cosmic-accent/10 hover:bg-cosmic-accent/20 text-cosmic-accent rounded-xl transition-all">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -80,6 +82,12 @@
         </div>
         {% endfor %}
     </div>
+
+    <!-- Modern Professional Pagination -->
+    {% if is_paginated %}
+        {% include "polls/partials/professional_pagination.html" %}
+    {% endif %}
+
     {% else %}
     <div class="stellar-card p-20 text-center space-y-6">
         <div class="w-20 h-20 bg-white/5 text-slate-700 rounded-full flex items-center justify-center mx-auto mb-4 border border-white/5">
@@ -96,5 +104,54 @@
         </div>
     </div>
     {% endif %}
+    <!-- Voted Polls Section -->
+    <div class="pt-20">
+        <div class="flex items-center gap-4 mb-10">
+            <h2 class="text-3xl font-black text-white uppercase tracking-tight">Katıldığım Anketler</h2>
+            <div class="h-1 flex-grow bg-gradient-to-r from-green-500/30 to-transparent rounded-full"></div>
+        </div>
+
+        {% if voted_polls %}
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+            {% for question in voted_polls %}
+            <div class="stellar-card group flex flex-col justify-between h-full opacity-80 hover:opacity-100 transition-all">
+                <div>
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="flex gap-2">
+                            <span class="px-2 py-0.5 bg-green-500/10 text-green-500 text-[10px] font-black rounded uppercase tracking-widest border border-green-500/20">OYLANDI</span>
+                            {% if question.is_finished %}
+                            <span class="px-2 py-0.5 bg-red-500/10 text-red-500 text-[10px] font-black rounded uppercase tracking-widest border border-red-500/20">BİTTİ</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <h3 class="text-xl font-bold text-white mb-4 line-clamp-2 group-hover:text-cosmic-accent transition-colors">
+                        {{ question.question_text }}
+                    </h3>
+
+                    <div class="flex items-center gap-4 text-[10px] font-black text-slate-600 uppercase tracking-widest mb-4">
+                        <div class="flex items-center gap-1.5">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                            </svg>
+                            {{ question.total_votes_count }} KATILIMCI
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-3 pt-6 border-t border-white/5">
+                    <a href="{% url 'polls:results' question.id %}" class="flex-grow py-3 px-4 bg-cosmic-accent/10 hover:bg-cosmic-accent/20 text-cosmic-accent rounded-xl text-[10px] font-black tracking-widest uppercase text-center transition-all">
+                        SONUÇLARI İNCELE
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="stellar-card p-12 text-center border-dashed border-white/10 group">
+            <p class="text-slate-500 uppercase font-black text-[10px] tracking-[0.2em] group-hover:text-slate-400 transition-colors">Henüz hiçbir ankete oyla katılmadınız.</p>
+        </div>
+        {% endif %}
+    </div>
 </div>
 {% endblock %}

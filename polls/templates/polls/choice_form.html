@@ -5,11 +5,11 @@
 {% block content %}
 <div class="max-w-2xl mx-auto py-12 font-outfit" data-aos="fade-up">
     <header class="mb-12">
-        <div class="inline-block px-3 py-1 bg-success/10 text-success rounded-full text-xs font-bold tracking-widest uppercase mb-4">
+        <div class="inline-block px-3 py-1 bg-cosmic-accent/10 text-cosmic-accent rounded-full text-xs font-bold tracking-widest uppercase mb-4 border border-cosmic-accent/20">
             Yapılandırma
         </div>
-        <h1 class="text-5xl font-extrabold text-base-content tracking-tighter leading-none mb-4">
-            {% if object %}Seçeneği<br><span class="text-success">Güncelle</span>{% else %}Yeni<br><span class="text-success">Seçenek Ekle</span>{% endif %}
+        <h1 class="text-5xl font-extrabold text-white tracking-tighter leading-none mb-4">
+            {% if object %}Seçeneği<br><span class="text-cosmic-accent">Güncelle</span>{% else %}Yeni<br><span class="text-cosmic-accent">Seçenek Ekle</span>{% endif %}
         </h1>
         <p class="text-base-content/60">Anketinize yeni bir cevap şıkkı ekleyin veya mevcut olanı düzenleyin.</p>
     </header>
@@ -19,11 +19,11 @@
             {% csrf_token %}
             
             <div class="group relative">
-                <label class="block text-[10px] font-bold uppercase tracking-[0.2em] text-base-content/40 mb-3 ml-1 group-focus-within:text-success transition-colors">
+                <label for="id_choice_text" class="block text-[10px] font-bold uppercase tracking-[0.2em] text-base-content/40 mb-3 ml-1 group-focus-within:text-cosmic-accent transition-colors">
                     Seçenek Metni (Cevap)
                 </label>
-                <input type="text" name="{{ form.choice_text.name }}"
-                    class="w-full bg-transparent border-b-2 border-base-300 focus:border-success outline-none py-4 text-3xl font-bold transition-all placeholder:text-base-content/20"
+                <input type="text" name="{{ form.choice_text.name }}" id="id_choice_text"
+                    class="w-full bg-transparent border-b-2 border-base-300 focus:border-cosmic-accent outline-none py-4 text-3xl font-bold transition-all placeholder:text-base-content/20"
                     value="{{ form.choice_text.value|default_if_none:'' }}" 
                     placeholder="Örn: Kesinlikle Katılıyorum" required autofocus>
                 {% if form.choice_text.errors %}
@@ -32,7 +32,7 @@
             </div>
 
             <div class="flex flex-col sm:flex-row items-center gap-4 pt-4">
-                <button type="submit" class="btn btn-success btn-lg flex-1 sm:flex-none px-12 rounded-full font-black text-lg tracking-tighter hover:scale-105 transition-transform shadow-xl shadow-success/20 text-white leading-none">
+                <button type="submit" class="btn-cosmic flex-1 sm:flex-none px-12 rounded-xl font-black text-lg tracking-tighter hover:scale-105 transition-transform shadow-xl shadow-cosmic-accent/20 text-white leading-none h-16">
                     {% if object %}GÜNCELLE{% else %}EKLE VE KAYDET{% endif %}
                 </button>
                 <a href="javascript:history.back()" 

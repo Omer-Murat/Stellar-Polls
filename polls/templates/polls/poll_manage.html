@@ -35,7 +35,35 @@
                 </div>
 
                 <div class="pt-4 flex flex-col gap-4">
-                    <button type="submit" class="btn-cosmic w-full py-4 rounded-xl font-black text-xs tracking-widest uppercase">AYARLARI SENKRONİZE ET</button>
+                    <button type="submit" class="btn-cosmic w-full py-4 rounded-xl font-black text-xs tracking-widest uppercase text-center flex items-center justify-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                        </svg>
+                        AYARLARI SENKRONİZE ET
+                    </button>
+                    
+                    {% if not object.is_approved %}
+                    <div class="p-6 bg-cosmic-accent/10 border border-cosmic-accent/20 rounded-2xl space-y-4">
+                        <div class="flex items-center gap-3 text-cosmic-accent">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <span class="text-[10px] font-black uppercase tracking-widest">ONAY BEKLENİYOR</span>
+                        </div>
+                        <p class="text-[10px] text-slate-500 font-bold uppercase leading-relaxed">BU ANKET HENÜZ YÖNETİCİ TARAFINDAN ONAYLANMADI. ONAYLANDIĞINDA KEŞİF SAYFASINDA GÖRÜNECEKTİR.</p>
+                        <button type="button" class="w-full py-3 bg-cosmic-accent text-white rounded-xl font-black text-[10px] tracking-widest uppercase hover:bg-cosmic-accent/80 transition-all cursor-default opacity-50">
+                            ONAYA GÖNDERİLDİ
+                        </button>
+                    </div>
+                    {% else %}
+                    <div class="p-6 bg-cosmic-accent/10 border border-cosmic-accent/20 rounded-2xl flex items-center gap-3 text-cosmic-accent">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span class="text-[10px] font-black uppercase tracking-widest">YÖNETİCİ ONAYLI</span>
+                    </div>
+                    {% endif %}
+
                     <a href="{% url 'polls:detail' object.id %}" class="text-[10px] font-black text-slate-600 hover:text-white transition-colors tracking-widest uppercase text-center"
                         target="_blank">SİTEDE GÖRÜNTÜLE</a>
                 </div>

@@ -14,11 +14,11 @@ class PollStatsTests(TestCase):
         """
         now = timezone.now()
         # Active poll (no end date)
-        Question.objects.create(question_text="Active 1", start_date=now - datetime.timedelta(days=1))
+        Question.objects.create(question_text="Active 1", start_date=now - datetime.timedelta(days=1), is_approved=True)
         # Active poll (future end date)
-        Question.objects.create(question_text="Active 2", start_date=now - datetime.timedelta(days=1), end_date=now + datetime.timedelta(days=1))
+        Question.objects.create(question_text="Active 2", start_date=now - datetime.timedelta(days=1), end_date=now + datetime.timedelta(days=1), is_approved=True)
         # Finished poll (past end date)
-        Question.objects.create(question_text="Finished", start_date=now - datetime.timedelta(days=2), end_date=now - datetime.timedelta(days=1))
+        Question.objects.create(question_text="Finished", start_date=now - datetime.timedelta(days=2), end_date=now - datetime.timedelta(days=1), is_approved=True)
         
         user = User.objects.create_user(username='index_user', password='password')
         self.client.login(username='index_user', password='password')
