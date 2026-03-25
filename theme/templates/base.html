@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="tr" class="scroll-smooth">
 
@@ -5,7 +6,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Stellar Polls{% endblock %}</title>
-    {% load static %}
+    <meta name="description" content="Stellar Polls: Kendi anketlerinizi oluşturun, yönetin ve topluluğun fikirlerini keşfedin. Modern ve hızlı oylama platformu.">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ request.build_absolute_uri }}">
+    <meta property="og:title" content="Stellar Polls - Keşfet ve Paylaş">
+    <meta property="og:description" content="Modern ve hızlı anket platformu ile fikirlerini özgürce paylaş.">
+    <meta property="og:image" content="{% static 'theme/img/og-image.jpg' %}">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:title" content="Stellar Polls">
+    <meta property="twitter:description" content="Modern and fast polling platform.">
+
     <link rel="stylesheet" href="{% static 'theme/css/styles.css' %}?v=3">
     <!-- Google Fonts: Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -49,7 +63,7 @@
                         <!-- User Dropdown -->
                         <div class="dropdown dropdown-end">
                             <label tabindex="0" class="btn btn-ghost btn-circle avatar border border-white/10 hover:border-cosmic-accent/50 transition-all">
-                                <div class="w-10 rounded-full bg-cosmic-purple/20 flex items-center justify-center text-cosmic-purple font-bold">
+                                <div class="w-10 rounded-full bg-cosmic-cyan/20 flex items-center justify-center text-cosmic-cyan font-bold">
                                     {{ user.username|make_list|first|upper }}
                                 </div>
                             </label>

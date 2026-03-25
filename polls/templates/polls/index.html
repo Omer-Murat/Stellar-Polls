@@ -5,36 +5,50 @@
     <!-- Hero Section -->
     <section class="flex flex-col md:flex-row items-center justify-between gap-12 py-10">
         <div class="flex-1 text-center md:text-left">
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cosmic-accent/10 border border-cosmic-accent/20 text-cosmic-accent text-[10px] font-black uppercase tracking-[0.2em] mb-6 animate-glow">
+            <div
+                class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cosmic-accent/10 border border-cosmic-accent/20 text-cosmic-accent text-[10px] font-black uppercase tracking-[0.2em] mb-6 animate-glow">
                 <span class="relative flex h-2 w-2">
-                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cosmic-accent opacity-75"></span>
+                    <span
+                        class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cosmic-accent opacity-75"></span>
                     <span class="relative inline-flex rounded-full h-2 w-2 bg-cosmic-accent"></span>
                 </span>
                 Sistem Çevrimiçi
             </div>
             <h1 class="text-5xl md:text-7xl font-black mb-8 leading-tight tracking-tight text-white">
-                Geleceği <br/>
-                <span class="text-transparent bg-clip-text bg-gradient-to-r from-cosmic-cyan via-cosmic-accent to-cosmic-cyan bg-[length:200%_auto] animate-[gradient_4s_linear_infinite]">Stellar</span> ile Oylayın.
+                Geleceği <br />
+                <span
+                    class=" bg-clip-text bg-gradient-to-r from-cosmic-cyan via-cosmic-accent to-cosmic-cyan bg-[length:200%_auto] animate-[gradient_4s_linear_infinite]">Stellar</span>
+                ile Oylayın.
             </h1>
             <p class="text-xl text-slate-300 max-w-xl mx-auto md:mx-0 leading-relaxed font-medium">
-                Kamuoyunun yıldız haritasını çıkarın. Şeffaf, hızlı ve kozmik hızda anketler ile geleceği birlikte şekillendirelim.
+                Kamuoyunun yıldız haritasını çıkarın. Şeffaf, hızlı ve kozmik hızda anketler ile geleceği birlikte
+                şekillendirelim.
             </p>
             <div class="mt-10 flex flex-wrap justify-center md:justify-start gap-4">
-                <a href="{% url 'polls:create' %}" class="btn-cosmic px-8 py-4 h-auto text-sm tracking-widest uppercase font-black">ANKET BAŞLAT</a>
-                <a href="#son-kesifler" class="px-8 py-4 border border-white/10 rounded-xl hover:bg-white/5 transition-all text-sm tracking-widest uppercase font-black">KEŞFE ÇIK</a>
+                <a href="{% url 'polls:create' %}"
+                    class="btn-cosmic px-8 py-4 h-auto text-sm tracking-widest uppercase font-black">ANKET BAŞLAT</a>
+                <a href="#son-kesifler"
+                    class="px-8 py-4 border border-white/10 rounded-xl hover:bg-white/5 transition-all text-sm tracking-widest uppercase font-black">KEŞFE
+                    ÇIK</a>
             </div>
         </div>
-        
+
         <!-- Decorative Orb -->
         <div class="relative hidden lg:block">
-            <div class="w-80 h-80 rounded-full bg-gradient-to-br from-cosmic-cyan/20 via-cosmic-accent/20 to-transparent blur-3xl animate-pulse"></div>
+            <div
+                class="w-80 h-80 rounded-full bg-gradient-to-br from-cosmic-cyan/20 via-cosmic-accent/20 to-transparent blur-3xl animate-pulse">
+            </div>
             <div class="absolute inset-0 flex items-center justify-center">
-                <div class="w-48 h-48 rounded-full border border-white/10 animate-[spin_10s_linear_infinite] flex items-center justify-center">
-                    <div class="w-32 h-32 rounded-full border border-cosmic-accent/20 animate-[spin_5s_linear_infinite_reverse]"></div>
+                <div
+                    class="w-48 h-48 rounded-full border border-white/10 animate-[spin_10s_linear_infinite] flex items-center justify-center">
+                    <div
+                        class="w-32 h-32 rounded-full border border-cosmic-accent/20 animate-[spin_5s_linear_infinite_reverse]">
+                    </div>
                 </div>
             </div>
             <div class="absolute inset-0 flex items-center justify-center">
-                <div class="w-12 h-12 bg-white rounded-full shadow-[0_0_50px_rgba(255,255,255,0.5)] animate-float"></div>
+                <div class="w-12 h-12 bg-white rounded-full shadow-[0_0_50px_rgba(255,255,255,0.5)] animate-float">
+                </div>
             </div>
         </div>
     </section>
@@ -44,13 +58,17 @@
         <!-- Active Polls -->
         <div class="stellar-card group">
             <div class="flex items-center gap-4">
-                <div class="p-3 bg-cosmic-accent/10 rounded-xl text-cosmic-accent group-hover:scale-110 transition-transform">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                <div
+                    class="p-3 bg-cosmic-accent/10 rounded-xl text-cosmic-accent group-hover:scale-110 transition-transform">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M13 10V3L4 14h7v7l9-11h-7z" />
                     </svg>
                 </div>
                 <div>
-                    <span class="block text-slate-400 text-[10px] font-black uppercase tracking-widest mb-1">AKTİF</span>
+                    <span
+                        class="block text-slate-400 text-[10px] font-black uppercase tracking-widest mb-1">AKTİF</span>
                     <span class="text-3xl font-black text-white counter-value">{{ total_active_polls }}</span>
                 </div>
             </div>
@@ -59,13 +77,17 @@
         <!-- Finished Polls -->
         <div class="stellar-card group">
             <div class="flex items-center gap-4">
-                <div class="p-3 bg-cosmic-accent/10 rounded-xl text-cosmic-accent group-hover:scale-110 transition-transform">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                <div
+                    class="p-3 bg-cosmic-accent/10 rounded-xl text-cosmic-accent group-hover:scale-110 transition-transform">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                 </div>
                 <div>
-                    <span class="block text-slate-400 text-[10px] font-black uppercase tracking-widest mb-1">BİTEN</span>
+                    <span
+                        class="block text-slate-400 text-[10px] font-black uppercase tracking-widest mb-1">BİTEN</span>
                     <span class="text-3xl font-black text-white counter-value">{{ total_finished_polls }}</span>
                 </div>
             </div>
@@ -75,12 +97,15 @@
         <div class="stellar-card group">
             <div class="flex items-center gap-4">
                 <div class="p-3 bg-slate-800 rounded-xl text-slate-400 group-hover:scale-110 transition-transform">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                 </div>
                 <div>
-                    <span class="block text-slate-400 text-[10px] font-black uppercase tracking-widest mb-1">TOPLAM</span>
+                    <span
+                        class="block text-slate-400 text-[10px] font-black uppercase tracking-widest mb-1">TOPLAM</span>
                     <span class="text-3xl font-black text-white counter-value">{{ total_polls }}</span>
                 </div>
             </div>
@@ -89,13 +114,17 @@
         <!-- Total Users -->
         <div class="stellar-card group">
             <div class="flex items-center gap-4">
-                <div class="p-3 bg-cosmic-accent/10 rounded-xl text-cosmic-accent group-hover:scale-110 transition-transform">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                <div
+                    class="p-3 bg-cosmic-accent/10 rounded-xl text-cosmic-accent group-hover:scale-110 transition-transform">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                     </svg>
                 </div>
                 <div>
-                    <span class="block text-slate-400 text-[10px] font-black uppercase tracking-widest mb-1">KEŞİFÇİ</span>
+                    <span
+                        class="block text-slate-400 text-[10px] font-black uppercase tracking-widest mb-1">KEŞİFÇİ</span>
                     <span class="text-3xl font-black text-white counter-value">{{ total_users }}</span>
                 </div>
             </div>
@@ -109,57 +138,73 @@
                 <h2 class="text-3xl font-black text-white tracking-tight uppercase">Son Keşifler</h2>
                 <div class="h-1 w-20 bg-gradient-to-r from-cosmic-accent to-transparent mt-2 rounded-full"></div>
             </div>
-            <a href="{% url 'polls:create' %}" class="text-[10px] font-black text-cosmic-accent hover:text-white transition-colors tracking-widest uppercase">TÜMÜNÜ GÖR →</a>
+            <a href="{% url 'polls:create' %}"
+                class="text-[10px] font-black text-cosmic-accent hover:text-white transition-colors tracking-widest uppercase">TÜMÜNÜ
+                GÖR →</a>
         </div>
 
         {% if latest_question_list %}
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {% for question in latest_question_list %}
-            <div class="stellar-card p-0 flex flex-col h-full group {% if question.is_finished %}opacity-40 grayscale-[0.6] brightness-75 scale-[0.98] blur-[0.3px] hover:opacity-100 hover:grayscale-0 hover:brightness-100 hover:scale-100 hover:blur-none transition-all duration-500{% endif %}">
+            <div
+                class="stellar-card p-0 flex flex-col h-full group {% if question.is_finished %}opacity-40 grayscale-[0.6] brightness-75 scale-[0.98] blur-[0.3px] hover:opacity-100 hover:grayscale-0 hover:brightness-100 hover:scale-100 hover:blur-none transition-all duration-500{% endif %}">
                 <div class="p-8 pb-4">
                     <div class="flex justify-between items-start mb-6">
                         <div class="flex gap-2">
-                        {% if question.has_voted %}
-                            <span class="px-2 py-0.5 bg-green-500/10 text-green-500 text-[9px] font-black rounded-lg uppercase tracking-widest border border-green-500/20">OYLANDI</span>
-                        {% endif %}
-                        {% if question.is_finished %}
-                            <span class="px-2 py-0.5 bg-red-500/10 text-red-500 text-[9px] font-black rounded-lg uppercase tracking-widest border border-red-500/20">TAMAMLANDI</span>
-                        {% elif question.end_date %}
-                            <span class="px-2 py-0.5 bg-cosmic-accent/10 text-cosmic-accent text-[9px] font-black rounded-lg uppercase tracking-widest border border-cosmic-accent/20 animate-pulse">SÜRELİ</span>
-                        {% else %}
-                            <span class="px-2 py-0.5 bg-slate-500/10 text-slate-400 text-[9px] font-black rounded-lg uppercase tracking-widest border border-white/5">SONSUZ</span>
-                        {% endif %}
+                            {% if question.has_voted %}
+                            <span
+                                class="px-2 py-0.5 bg-green-500/10 text-green-500 text-[9px] font-black rounded-lg uppercase tracking-widest border border-green-500/20">OYLANDI</span>
+                            {% endif %}
+                            {% if question.is_finished %}
+                            <span
+                                class="px-2 py-0.5 bg-red-500/10 text-red-500 text-[9px] font-black rounded-lg uppercase tracking-widest border border-red-500/20">TAMAMLANDI</span>
+                            {% elif question.end_date %}
+                            <span
+                                class="px-2 py-0.5 bg-cosmic-accent/10 text-cosmic-accent text-[9px] font-black rounded-lg uppercase tracking-widest border border-cosmic-accent/20 animate-pulse">SÜRELİ</span>
+                            {% else %}
+                            <span
+                                class="px-2 py-0.5 bg-slate-500/10 text-slate-400 text-[9px] font-black rounded-lg uppercase tracking-widest border border-white/5">SONSUZ</span>
+                            {% endif %}
                         </div>
-                        
+
                         <div class="flex items-center gap-1 text-[9px] font-black text-slate-500">
-                             <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                             {{ question.start_date|date:"d M Y" }}
                         </div>
                     </div>
-                    
-                    <h3 class="text-xl font-bold text-white group-hover:text-cosmic-accent transition-colors mb-6 line-clamp-2 min-h-[3.5rem] leading-snug">
+
+                    <h3
+                        class="text-xl font-bold text-white group-hover:text-cosmic-accent transition-colors mb-6 line-clamp-2 min-h-[3.5rem] leading-snug">
                         {{ question.question_text }}
                     </h3>
-                    
+
                     <div class="flex items-center gap-3">
                         <div class="flex -space-x-2">
                             {% for i in "123"|make_list %}
-                            <div class="w-6 h-6 rounded-full border border-cosmic-bg bg-slate-800 flex items-center justify-center text-[8px] font-black text-slate-500">
+                            <div
+                                class="w-6 h-6 rounded-full border border-cosmic-bg bg-slate-800 flex items-center justify-center text-[8px] font-black text-slate-500">
                                 {{ forloop.counter }}
                             </div>
                             {% endfor %}
                         </div>
-                        <span class="text-[10px] font-black text-slate-500 uppercase tracking-widest">{{ question.total_votes_count }} Katılımcı</span>
+                        <span class="text-[10px] font-black text-slate-500 uppercase tracking-widest">{{
+                            question.total_votes_count }} Katılımcı</span>
                     </div>
                 </div>
 
                 <div class="p-4 mt-auto">
                     {% if question.is_finished %}
-                        <a href="{% url 'polls:results' question.id %}" class="w-full py-3 bg-white/5 hover:bg-white/10 text-slate-300 text-[10px] font-black tracking-widest uppercase rounded-xl text-center border border-white/5 transition-all">SONUÇLARI ANALİZ ET</a>
+                    <a href="{% url 'polls:results' question.id %}"
+                        class="w-full py-3 bg-white/5 hover:bg-white/10 text-slate-300 text-[10px] font-black tracking-widest uppercase rounded-xl text-center border border-white/5 transition-all">SONUÇLARI
+                        ANALİZ ET</a>
                     {% else %}
-                        <a href="{% url 'polls:detail' question.id %}" class="btn-cosmic w-full rounded-xl py-3 text-[10px] font-black tracking-widest uppercase">GÖREVE BAŞLA</a>
+                    <a href="{% url 'polls:detail' question.id %}"
+                        class="btn-cosmic w-full rounded-xl py-3 text-[10px] font-black tracking-widest uppercase">GÖREVE
+                        BAŞLA</a>
                     {% endif %}
                 </div>
             </div>
@@ -168,21 +213,26 @@
 
         <!-- Modern Professional Pagination -->
         {% if is_paginated %}
-            {% include "polls/partials/professional_pagination.html" %}
+        {% include "polls/partials/professional_pagination.html" %}
         {% endif %}
 
         {% else %}
         <div class="stellar-card p-20 text-center border-dashed border-white/5">
-            <div class="bg-white/5 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-8 border border-white/5">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-slate-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+            <div
+                class="bg-white/5 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-8 border border-white/5">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-slate-700" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
                 </svg>
             </div>
             <h3 class="text-2xl font-black text-white mb-4 uppercase tracking-widest">Henüz Veri Yok</h3>
             <p class="text-slate-400 mb-10 max-w-sm mx-auto text-sm leading-relaxed">
                 Bu koordinatlarda henüz keşfedilmiş bir anket bulunamadı. Kendi anketinizi başlatmaya ne dersiniz?
             </p>
-            <a href="{% url 'polls:create' %}" class="btn-cosmic px-12 py-4 h-auto rounded-xl font-black text-xs tracking-widest">İLK SİNYALİ GÖNDER</a>
+            <a href="{% url 'polls:create' %}"
+                class="btn-cosmic px-12 py-4 h-auto rounded-xl font-black text-xs tracking-widest">İLK SİNYALİ
+                GÖNDER</a>
         </div>
         {% endif %}
     </section>
@@ -190,9 +240,17 @@
 
 <style>
     @keyframes gradient {
-        0% { background-position: 0% 50%; }
-        50% { background-position: 100% 50%; }
-        100% { background-position: 0% 50%; }
+        0% {
+            background-position: 0% 50%;
+        }
+
+        50% {
+            background-position: 100% 50%;
+        }
+
+        100% {
+            background-position: 0% 50%;
+        }
     }
 </style>
 {% endblock content %}

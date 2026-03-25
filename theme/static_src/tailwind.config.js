@@ -12,7 +12,7 @@ module.exports = {
       colors: {
         'cosmic-bg': '#0B0F19',
         'cosmic-accent': '#06b6d4',
-        'cosmic-purple': '#a855f7',
+        'cosmic-cyan': '#22d3ee',
         'cosmic-glass': 'rgba(11, 15, 25, 0.7)',
       },
       animation: {
@@ -26,8 +26,8 @@ module.exports = {
           '50%': { transform: 'translateY(-15px)' },
         },
         glow: {
-          '0%, 100%': { boxShadow: '0 0 10px rgba(6, 182, 212, 0.2), 0 0 20px rgba(168, 85, 247, 0.1)' },
-          '50%': { boxShadow: '0 0 25px rgba(6, 182, 212, 0.4), 0 0 40px rgba(168, 85, 247, 0.2)' },
+          '0%, 100%': { boxShadow: '0 0 10px rgba(6, 182, 212, 0.2), 0 0 20px rgba(34, 211, 238, 0.1)' },
+          '50%': { boxShadow: '0 0 25px rgba(6, 182, 212, 0.4), 0 0 40px rgba(34, 211, 238, 0.2)' },
         },
         'fade-in': {
           'from': { opacity: '0', transform: 'translateY(20px)' },
